@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">الأيمن</string>
+    <string name="connect_title">الاتصال بسيرفر الفرع</string>
+    <string name="connect_desc">امسح رمز QR الظاهر في إعدادات البرنامج على كمبيوتر السيرفر، أو اكتب عنوان السيرفر يدوياً</string>
+    <string name="server_hint">مثال: http://192.168.1.10:7420</string>
+    <string name="btn_scan">مسح رمز QR</string>
+    <string name="btn_connect">اتصال</string>
+    <string name="btn_change_server">تغيير عنوان السيرفر</string>
+    <string name="err_empty">الرجاء إدخال عنوان السيرفر</string>
+    <string name="err_connect">تعذّر الوصول لهذا العنوان. تأكد أن الموبايل متصل بنفس شبكة الواي فاي الخاصة بالسيرفر، وأن السيرفر يعمل حالياً.</string>
+    <string name="checking">جارٍ التحقق من الاتصال…</string>
+</resources>

@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.alayman.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.alayman.app"
+        minSdk 23
+        targetSdk 34
+        versionCode 2
+        versionName "1.1"
+    }
+
+    signingConfigs {
+        release {
+            // توقيع ثابت بملف شهادة مخزّن بالمستودع (mobile-app/keystore/alayman-release.keystore)
+            // بدل شهادة Debug العشوائية التي كانت تتولّد بشكل مختلف بكل تشغيلة GitHub Actions —
+            // وهذا كان سبب عدم نجاح "التحديث فوق النسخة القديمة" وإجبارك على حذفها يدوياً كل مرة.
+            // بتوقيع ثابت، أي تحديث قادم رح يُثبَّت فوق القديم مباشرة بدون أي حذف.
+            storeFile file("${rootProject.projectDir}/keystore/alayman-release.keystore")
+            storePassword "alayman2026"
+            keyAlias "alayman"
+            keyPassword "alayman2026"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+
+    buildFeatures {
+        viewBinding false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+}

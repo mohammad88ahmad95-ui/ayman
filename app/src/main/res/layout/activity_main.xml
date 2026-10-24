@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/navy">
+
+    <!-- شاشة الربط الأولى -->
+    <ScrollView
+        android:id="@+id/connectScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="32dp">
+
+            <ImageView
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginBottom="20dp"
+                android:src="@mipmap/ic_launcher_foreground"
+                android:contentDescription="@string/app_name" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/connect_title"
+                android:textColor="@color/neon"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/connect_desc"
+                android:textColor="@color/muted"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:layout_marginBottom="24dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnScan"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/btn_scan"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/neon"
+                android:textColor="@color/navy"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="— أو —"
+                android:textColor="@color/muted"
+                android:layout_marginBottom="16dp" />
+
+            <EditText
+                android:id="@+id/edtServer"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:hint="@string/server_hint"
+                android:textColor="@color/white"
+                android:textColorHint="@color/muted"
+                android:textDirection="ltr"
+                android:gravity="center|start"
+                android:inputType="textUri"
+                android:background="@drawable/edit_bg"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:layout_marginBottom="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConnect"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/btn_connect"
+                android:textAllCaps="false"
+                app:strokeColor="@color/neon"
+                app:strokeWidth="1dp"
+                android:textColor="@color/neon"
+                app:backgroundTint="@color/navy" />
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/muted"
+                android:gravity="center"
+                android:layout_marginTop="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- شاشة البرنامج الفعلية: بدون أي خاصية "سحب للتحديث" نهائياً، حتى لا تتعارض
+         مع التمرير الطبيعي داخل صفحات البرنامج. التحديث اليدوي (نادراً ما يُحتاج
+         لأن البيانات تتحدث لحظياً تلقائياً) متاح بزر صغير ثابت بالزاوية. -->
+    <FrameLayout
+        android:id="@+id/webviewGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="16dp"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_refresh"
+            app:backgroundTint="@color/navy"
+            app:tint="@color/neon"
+            android:contentDescription="تحديث الصفحة" />
+
+    </FrameLayout>
+
+</FrameLayout>

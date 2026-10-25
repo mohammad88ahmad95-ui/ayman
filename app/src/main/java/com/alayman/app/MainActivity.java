@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -248,13 +249,31 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (webviewGroup.getVisibility() == View.VISIBLE && webView.canGoBack()) {
-            webView.goBack();
-        } else if (webviewGroup.getVisibility() == View.VISIBLE) {
-            // بدل إغلاق التطبيق مباشرة من الصفحة الرئيسية، نرجع لشاشة الاتصال لتبديل السيرفر عند الحاجة
+        if (webviewGroup.getVisibility() != View.VISIBLE) {
             super.onBackPressed();
-        } else {
-            super.onBackPressed();
+            return;
         }
+        // أولاً: هل في نافذة منبثقة (مثل "مادة جديدة") أو قائمة جانبية مفتوحة داخل الصفحة؟
+        // إذا في، نسكّرها بس، ومنخرج من التطبيق إطلاقاً. هاد كان سبب خروج التطبيق كاملاً
+        // بالغلط عند الرجوع من داخل نافذة منبثقة — كان الكود القديم ما يعرف إنها مفتوحة أصلاً.
+        webView.evaluateJavascript("window.__androidBack ? window.__androidBack() : false", result -> {
+            boolean handledByJs = "true".equals(result);
+            if (handledByJs) return;
+            if (webView.canGoBack()) {
+                webView.goBack();
+                return;
+            }
+            // ما في شي نرجع له جوا الصفحة — بدل ما نطلع من التطبيق فوراً ومن غير تنبيه (هيك
+            // صار بالغلط)، نطلب ضغطة رجوع ثانية خلال ثانيتين لتأكيد الخروج فعلاً.
+            long now = System.currentTimeMillis();
+            if (now - lastBackPressTime < 2000) {
+                MainActivity.super.onBackPressed();
+            } else {
+                lastBackPressTime = now;
+                Toast.makeText(MainActivity.this, "اضغط رجوع مرة ثانية للخروج من البرنامج", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+    private long lastBackPressTime = 0;
 }

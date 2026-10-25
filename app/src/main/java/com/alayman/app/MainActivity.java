@@ -164,19 +164,22 @@ public class MainActivity extends AppCompatActivity {
         String url = normalize(rawUrl);
         txtStatus.setText(R.string.checking);
         new Thread(() -> {
-            boolean ok = ping(url);
+            String err = ping(url);
             runOnUiThread(() -> {
-                if (ok) {
+                if (err == null) {
                     prefs.edit().putString(KEY_SERVER, url).apply();
                     openServer(url, false);
                 } else {
-                    txtStatus.setText(R.string.err_connect);
+                    // نعرض سبب الفشل الفعلي مؤقتاً (بدل رسالة عامة) حتى نعرف بالضبط
+                    // وين المشكلة: اسم مضيف غير موجود، رفض اتصال، انتهاء مهلة... الخ.
+                    txtStatus.setText(getString(R.string.err_connect) + "\n\n[تفاصيل تقنية: " + err + "]");
                 }
             });
         }).start();
     }
 
-    private boolean ping(String baseUrl) {
+    /** يرجع null عند النجاح، أو نص يشرح سبب الفشل بالضبط عند الفشل (لأغراض التشخيص) */
+    private String ping(String baseUrl) {
         try {
             URL u = new URL(baseUrl);
             HttpURLConnection c = (HttpURLConnection) u.openConnection();
@@ -185,9 +188,10 @@ public class MainActivity extends AppCompatActivity {
             c.setRequestMethod("GET");
             int code = c.getResponseCode();
             c.disconnect();
-            return code >= 200 && code < 500;
+            if (code >= 200 && code < 500) return null;
+            return "HTTP " + code;
         } catch (Exception e) {
-            return false;
+            return e.getClass().getSimpleName() + ": " + e.getMessage();
         }
     }
 
@@ -229,11 +233,11 @@ public class MainActivity extends AppCompatActivity {
             final String url = currentUrl;
             if (url == null) { recovering = false; return; }
             new Thread(() -> {
-                boolean ok = ping(url);
+                String err = ping(url);
                 runOnUiThread(() -> {
                     recovering = false;
                     if (url.equals(currentUrl)) {
-                        if (ok) { errorStreak = 0; webView.reload(); }
+                        if (err == null) { errorStreak = 0; webView.reload(); }
                         else { handleMainFrameError(); }
                     }
                 });
